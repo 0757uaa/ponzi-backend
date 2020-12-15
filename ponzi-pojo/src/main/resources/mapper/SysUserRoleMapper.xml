@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uaa.ponzi.mapper.SysUserRoleMapper">
+
+    <resultMap id="SysUserRoleDto" type="com.uaa.ponzi.dto.SysUserRoleDto">
+        <id property="id" column="user_id"/>
+        <result property="username" column="user_username"/>
+        <result property="sex" column="user_sex"/>
+        <collection property="roleDtoList" ofType="com.uaa.ponzi.dto.SysRoleDto">
+            <id property="id" column="role_id"/>
+            <result property="roleCode" column="role_code"/>
+            <result property="roleName" column="role_name"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectUserRoleByUserId" parameterType="string" resultMap="SysUserRoleDto">
+        select su.id as user_id, su.username as user_username, su.sex as user_sex
+            , sr.id as role_id, sr.role_code, sr.role_name from sys_user su
+        left join sys_user_role sur on su.id = sur.sys_user_id
+        left join sys_role sr on sur.sys_role_id = sr.id
+        where su.id = #{userId}
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uaa.ponzi.mapper.SysUserMapper">
+
+    <resultMap id="SysUserEntity" type="com.uaa.ponzi.pojo.SysUser">
+        <id property="id" column="id"></id>
+        <result property="dencryptPassword" column="dencrypt_password" />
+        <result property="encryptPassword" column="encrypt_password" />
+        <result property="username" column="username" />
+        <result property="createTime" column="create_time" />
+        <result property="deleted" column="deleted" />
+        <result property="disabled" column="disabled" />
+        <result property="version" column="version" />
+        <result property="sex" column="sex" />
+        <result property="updateTime" column="update_time" />
+        <result property="disabledTime" column="disabled_time" />
+        <result property="salt" column="salt" />
+    </resultMap>
+
+    <sql id="BaseColumnSysUser">
+        id, username, dencrypt_password, encrypt_password, create_time, deleted, disabled, sex, version, update_time, salt, disabled_time
+    </sql>
+
+
+    <resultMap id="SysUserBo" type="com.uaa.ponzi.bo.SysUserBo">
+        <id property="id" column="id"></id>
+        <result property="username" column="username" />
+        <result property="createTime" column="create_time" />
+        <result property="deleted" column="deleted" />
+        <result property="disabled" column="disabled" />
+        <result property="sex" column="sex" />
+        <result property="updateTime" column="update_time" />
+        <result property="disabledTime" column="disabled_time" />
+    </resultMap>
+
+    <select id="pageQuery" resultMap="SysUserBo">
+        select
+        <include refid="BaseColumnSysUser"></include>
+        from sys_user
+        <where>
+            deleted = 0
+            <if test="sysUserQuery.username != null and sysUserQuery.username != ''">
+                and username = #{sysUserQuery.username}
+            </if>
+        </where>
+    </select>
+
+</mapper>

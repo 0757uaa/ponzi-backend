@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uaa.ponzi.mapper.SysTreeRoleMenuPermissionBoMapper">
+
+    <resultMap id="SysTreeRoleMenuPermissionBo" type="com.uaa.ponzi.bo.SysTreeRoleMenuPermissionBo">
+        <id property="id" column="id" />
+        <result property="menuName" column="menu_name" />
+        <result property="roleId" column="role_id" />
+        <collection property="children" ofType="com.uaa.ponzi.bo.SysTreeRoleMenuPermissionBo" column="{pid=id, roleId=role_id}" select="treeRoleMenuPermissionByPid" />
+        <collection property="permissions" ofType="com.uaa.ponzi.bo.SysPermissionBo" column="{menuId=id}" select="queryPermissionByMenuId" />
+        <collection property="checkedPermissions" ofType="java.lang.String" column="{menuId=id, roleId=role_id}" select="queryPermissionByMenuIdAndRoleId" />
+    </resultMap>
+
+    <select id="treeRoleMenuPermission" parameterType="string" resultMap="SysTreeRoleMenuPermissionBo">
+        select id, menu_name, #{roleId} as role_id
+        from sys_menu
+        where pid = '#'
+        order by orders asc
+    </select>
+
+    <select id="treeRoleMenuPermissionByPid" resultMap="SysTreeRoleMenuPermissionBo">
+        select id, menu_name, #{roleId} as role_id
+        from sys_menu
+        where pid = #{pid}
+        order by orders asc
+    </select>
+
+    <resultMap id="SysPermissionBoResultMap" type="com.uaa.ponzi.bo.SysPermissionBo">
+        <id property="id" column="permission_id" />
+        <result property="permissionName" column="permission_name" />
+    </resultMap>
+    <select id="queryPermissionByMenuId" resultMap="SysPermissionBoResultMap">
+        select id as permission_id, permission_name
+        from sys_permission
+        where sys_menu_id = #{menuId}
+    </select>
+    <select id="queryPermissionByMenuIdAndRoleId" resultType="string">
+        select sp.id
+        from sys_permission sp
+        inner join sys_role_permission srp on sp.id = srp.sys_permission_id
+        where srp.sys_role_id = #{roleId} and sp.sys_menu_id = #{menuId}
+    </select>
+
+</mapper>

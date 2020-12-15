@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uaa.ponzi.mapper.SysMenuMapper">
+
+    <resultMap id="SysTreeMenuBo" type="com.uaa.ponzi.bo.SysTreeMenuBo">
+        <id property="id" column="id" />
+        <result property="menuName" column="menu_name" />
+        <result property="menuIcon" column="menu_icon" />
+        <result property="routeName" column="route_name" />
+        <result property="routePath" column="route_path" />
+        <result property="routeComponent" column="route_component" />
+        <result property="pid" column="pid" />
+        <result property="orders" column="orders" />
+        <result property="menuTitle" column="menu_title" />
+        <collection property="children" ofType="com.uaa.ponzi.bo.SysTreeMenuBo" column="id" select="queryByPid"/>
+    </resultMap>
+
+    <select id="treeAllMenu" parameterType="string" resultMap="SysTreeMenuBo">
+        select id, menu_name, menu_icon, route_name, route_path, route_component, pid, orders, menu_title
+        from sys_menu
+        where pid = '#'
+        order by orders asc
+    </select>
+
+    <select id="queryByPid" parameterType="string" resultMap="SysTreeMenuBo">
+        select id, menu_name, menu_icon, route_name, route_path, route_component, pid, orders, menu_title
+        from sys_menu
+        where pid = #{pid}
+        order by orders asc
+    </select>
+
+
+
+    <resultMap id="SysTreeMenuBoByRoleId" type="com.uaa.ponzi.bo.SysTreeMenuBo">
+        <id property="id" column="id" />
+        <result property="menuName" column="menu_name" />
+        <result property="menuIcon" column="menu_icon" />
+        <result property="routeName" column="route_name" />
+        <result property="routePath" column="route_path" />
+        <result property="routeComponent" column="route_component" />
+        <result property="pid" column="pid" />
+        <result property="orders" column="orders" />
+        <result property="roleId" column="role_id" />
+        <result property="menuTitle" column="menu_title" />
+        <collection property="children" ofType="com.uaa.ponzi.bo.SysTreeMenuBo" column="{roleId=role_id,pid=id}" select="treeRoleMenuByRoleIdAndParentId"/>
+    </resultMap>
+
+    <select id="treeRoleMenuByRoleId" parameterType="string" resultMap="SysTreeMenuBoByRoleId">
+        select id, menu_name, menu_icon, route_name, route_path, route_component, pid, orders, menu_title, re.sys_role_id as role_id from sys_menu sm
+        inner join
+        (select srm.sys_menu_id, srm.sys_role_id from sys_role_menu srm where srm.sys_role_id = #{roleId}) re on sm.id = re.sys_menu_id
+        where sm.pid = '#'
+        order by orders asc
+    </select>
+
+    <select id="treeRoleMenuByRoleIdAndParentId" resultMap="SysTreeMenuBoByRoleId">
+        select id, menu_name, menu_icon, route_name, route_path, route_component, pid, orders, menu_title, re.sys_role_id as role_id from sys_menu sm
+        inner join
+        (select srm.sys_menu_id, srm.sys_role_id from sys_role_menu srm where srm.sys_role_id = #{roleId}) re on sm.id = re.sys_menu_id
+        where sm.pid = #{pid}
+        order by orders asc
+    </select>
+
+
+    <resultMap id="SysTreeMenuBoByUserId" type="com.uaa.ponzi.bo.SysTreeMenuBo">
+        <id property="id" column="id" />
+        <result property="menuName" column="menu_name" />
+        <result property="menuIcon" column="menu_icon" />
+        <result property="routeName" column="route_name" />
+        <result property="routePath" column="route_path" />
+        <result property="routeComponent" column="route_component" />
+        <result property="pid" column="pid" />
+        <result property="orders" column="orders" />
+        <result property="menuTitle" column="menu_title" />
+        <result property="userId" column="user_id" />
+        <collection property="children" ofType="com.uaa.ponzi.bo.SysTreeMenuBo" column="{userId=user_id,menuId=id}" select="treeRoleMenuByUserIdAndMenuId"/>
+    </resultMap>
+
+    <select id="treeRoleMenuByUserId" resultMap="SysTreeMenuBoByUserId">
+        select distinct id, menu_name, menu_icon, route_name, route_path, route_component, pid, orders, menu_title, #{userId} as user_id from sys_menu sm
+        inner join
+        (
+            select srm.sys_menu_id
+            from sys_role_menu srm
+            where srm.sys_role_id in
+            (
+                select sur.sys_role_id from sys_user_role sur where sur.sys_user_id = #{userId}
+            )
+        ) re on sm.id = re.sys_menu_id
+        where sm.pid = '#'
+        order by orders asc;
+    </select>
+
+    <select id="treeRoleMenuByUserIdAndMenuId" resultMap="SysTreeMenuBoByUserId">
+        select distinct id, menu_name, menu_icon, route_name, route_path, route_component, pid, orders, menu_title, #{userId} as user_id from sys_menu sm
+        inner join
+        (
+            select srm.sys_menu_id
+            from sys_role_menu srm
+            where srm.sys_role_id in
+            (
+                select sur.sys_role_id from sys_user_role sur where sur.sys_user_id = #{userId}
+            )
+        ) re on sm.id = re.sys_menu_id
+        where sm.pid = #{menuId}
+        order by orders asc;
+    </select>
+
+    <delete id="deleteMenuById" parameterType="string" statementType="CALLABLE">
+        {call proc_deleteMenuById(#{id})}
+    </delete>
+
+</mapper>
