@@ -35,7 +35,7 @@ ponzi-backend是一套通用的后台用户、角色、菜单、权限管理系�
 <td style="text-align: left">https://hibernate.org/validator/</td>
 </tr>
 <tr>
-<td style="text-align: left">Hikari</td>
+<td style="text-align: left">HikariCP</td>
 <td style="text-align: left">数据库连接池</td>
 <td style="text-align: left">https://github.com/brettwooldridge/HikariCP</td>
 </tr>
