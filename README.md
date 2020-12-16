@@ -39,7 +39,6 @@ ponzi-backend是一套通用的后台用户、角色、菜单、权限管理系�
 <td style="text-align: left">数据库连接池</td>
 <td style="text-align: left">https://github.com/brettwooldridge/HikariCP</td>
 </tr>
-
 <tr>
 <td style="text-align: left">Lombok</td>
 <td style="text-align: left">简化对象封装工具</td>
