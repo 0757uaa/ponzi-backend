@@ -1,5 +1,6 @@
 package com.uaa.ponzi.base.controller;
 
+import com.uaa.ponzi.common.enums.HttpStatusEnum;
 import com.uaa.ponzi.common.util.RestResponseUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +11,8 @@ public class BaseLoginController extends BaseController {
 
     @GetMapping("/error_login_fail")
     public RestResponseUtil errorLoginFail() {
-        return RestResponseUtil.error("请登录");
+//        return RestResponseUtil.error("请登录");
+        return RestResponseUtil.error(HttpStatusEnum.LOGIN_TIMEOVER);
     }
 
 

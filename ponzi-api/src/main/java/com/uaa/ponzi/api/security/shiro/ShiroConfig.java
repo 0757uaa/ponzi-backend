@@ -1,9 +1,9 @@
 package com.uaa.ponzi.api.security.shiro;
 
+import com.uaa.ponzi.api.security.shiro.filter.ShiroUserFilter;
 import com.uaa.ponzi.api.security.shiro.realm.AdminRealm;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -48,6 +49,11 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+
+        Map<String, Filter> filterMap = shiroFilterFactoryBean.getFilters();
+        filterMap.put("authc", new ShiroUserFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
+
         shiroFilterFactoryBean.setLoginUrl("/error_login_fail"); // 设置在需要认证已登录，但没有登录的情况下跳转的链接
 //        shiroFilterFactoryBean.setSuccessUrl("/login_success"); // 设置登录成功后跳转的链接 注：由于使用ajax方式，所以这里不用设置
         shiroFilterFactoryBean.setUnauthorizedUrl("/error_unauth"); // 设置在权限不足的情况下跳转的链接
