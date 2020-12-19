@@ -13,6 +13,7 @@ import com.uaa.ponzi.pojo.SysRole;
 import com.uaa.ponzi.pojo.SysRoleMenu;
 import com.uaa.ponzi.service.SysRoleMenuService;
 import com.uaa.ponzi.service.SysRoleService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -44,6 +45,7 @@ public class SysRoleController extends BaseController {
      * @return
      */
     @PostMapping("/all_roles")
+    @RequiresPermissions("role:link:list")
     public RestResponseUtil allRoles() {
         List<SysRole> allRoles = sysRoleService.allRoles();
         return RestResponseUtil.ok(allRoles);
@@ -56,6 +58,7 @@ public class SysRoleController extends BaseController {
      * @return
      */
     @PostMapping("/add")
+    @RequiresPermissions("role:link:add:save")
     public RestResponseUtil add(
             @Valid SysRoleNewDto roleNewDto
             , BindingResult bindingResult) {
@@ -164,6 +167,7 @@ public class SysRoleController extends BaseController {
      * @return
      */
     @PostMapping("/tree_all_role_menu_permission")
+    @RequiresPermissions("role:link:set_menu_permission")
     public RestResponseUtil treeAllRoleMenuPermission(String roleId) {
         List<SysTreeRoleMenuPermissionBo> list = sysRoleService.treeRoleMenuPermissionByRoleId(roleId);
         List<SysRoleMenu> roleMenuList = sysRoleMenuService.findByRoleId(roleId);
@@ -249,6 +253,7 @@ public class SysRoleController extends BaseController {
      * @return
      */
     @PostMapping("/save_or_update_rolemenupermission")
+    @RequiresPermissions("role:link:save_set")
     public RestResponseUtil saveOrUpdateRoleMenuPermission(String roleId, String menuIds, String permissionIds) {
         List<String> menuIdList = null;
         List<String> permissionIdList = null;
@@ -271,6 +276,7 @@ public class SysRoleController extends BaseController {
      * @return
      */
     @PostMapping("/delete_role")
+    @RequiresPermissions("role:link:delete")
     public RestResponseUtil deleteRole(String roleId) {
         sysRoleService.deleteRole(roleId);
         return RestResponseUtil.ok();
