@@ -6,6 +6,7 @@ import com.uaa.ponzi.common.util.RestResponseUtil;
 import com.uaa.ponzi.dto.SysMenuNewDto;
 import com.uaa.ponzi.pojo.SysMenu;
 import com.uaa.ponzi.service.SysMenuService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -30,6 +31,7 @@ public class SysMenuController extends BaseController {
      * @return
      */
     @PostMapping("/add")
+    @RequiresPermissions("menu:link:add:save")
     public RestResponseUtil add(@Valid SysMenuNewDto menuNewDto, BindingResult bindingResult) {
         super.valid(bindingResult);
 
@@ -46,6 +48,7 @@ public class SysMenuController extends BaseController {
      * @return
      */
     @PostMapping("/delete")
+    @RequiresPermissions("menu:link:delete")
     public RestResponseUtil delete(String menuId) {
         sysMenuService.deleteByMenuId(menuId);
 
@@ -57,6 +60,7 @@ public class SysMenuController extends BaseController {
      * @return
      */
     @PostMapping("tree_all_menu")
+    @RequiresPermissions("menu:link:list")
     public RestResponseUtil treeAllMenu() {
         List<SysTreeMenuBo> menuBoList = sysMenuService.treeAllMenu();
         return RestResponseUtil.ok(menuBoList);

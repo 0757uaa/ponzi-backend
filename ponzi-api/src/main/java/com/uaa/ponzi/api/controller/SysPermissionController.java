@@ -5,6 +5,7 @@ import com.uaa.ponzi.common.util.RestResponseUtil;
 import com.uaa.ponzi.dto.SysPermissionNewDto;
 import com.uaa.ponzi.pojo.SysPermission;
 import com.uaa.ponzi.service.SysPermissionService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -30,6 +31,7 @@ public class SysPermissionController extends BaseController {
      * @return
      */
     @PostMapping("/add")
+    @RequiresPermissions("menu:link:permission_set:add_permission:save")
     public RestResponseUtil add(
             @Valid SysPermissionNewDto permissionNewDto
             , BindingResult bindingResult) {
@@ -53,6 +55,7 @@ public class SysPermissionController extends BaseController {
      * @return
      */
     @PostMapping("/list_by_menuid")
+    @RequiresPermissions("menu:link:permission_set:menu_permission:list")
     public RestResponseUtil listByMenuId(String menuId) {
         return RestResponseUtil.ok(sysPermissionService.findByMenuId(menuId));
     }
@@ -64,6 +67,7 @@ public class SysPermissionController extends BaseController {
      * @return
      */
     @PostMapping("/delete_permission")
+    @RequiresPermissions("menu:link:permission_set:menu_permission:delete")
     public RestResponseUtil deletePermission(String permissionId, String menuId) {
         sysPermissionService.deletePermission(permissionId, menuId);
         return RestResponseUtil.ok();
