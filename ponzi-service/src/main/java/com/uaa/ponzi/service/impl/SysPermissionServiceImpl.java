@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.uaa.ponzi.bo.SysPermissionBo;
 import com.uaa.ponzi.enums.SysPermissionTypeEnum;
 import com.uaa.ponzi.mapper.SysPermissionMapper;
+import com.uaa.ponzi.mapper.SysRolePermissionMapper;
 import com.uaa.ponzi.pojo.SysPermission;
+import com.uaa.ponzi.pojo.SysRolePermission;
 import com.uaa.ponzi.service.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     @Autowired
     private SysPermissionMapper sysPermissionMapper;
+
+    @Autowired
+    private SysRolePermissionMapper sysRolePermissionMapper;
 
 
     @Override
@@ -37,6 +42,10 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     @Override
     public int deletePermission(String permissionId, String menuId) {
+        UpdateWrapper<SysRolePermission> rolePermissionDelete = new UpdateWrapper<>();
+        rolePermissionDelete.eq("sys_permission_id", permissionId);
+        sysRolePermissionMapper.delete(rolePermissionDelete);
+
         UpdateWrapper<SysPermission> deleteWrapper = new UpdateWrapper<>();
         deleteWrapper.eq("id", permissionId);
         deleteWrapper.eq("sys_menu_id", menuId);
