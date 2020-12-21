@@ -16,7 +16,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3307/ponzi?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    url: jdbc:mysql://127.0.0.1:3307/ponzi?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
     username: root
     password: 123456
     hikari:

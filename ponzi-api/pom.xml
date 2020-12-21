@@ -13,6 +13,11 @@
 
     <description>api接口</description>
 
+    <!--项目打包成war形式，需要经过三步-->
+    <!--./start 项目打包成war形式，需要经过四步，第【1】步-->
+<!--    <packaging>war</packaging>-->
+    <!--./end 项目打包成war形式，需要经过四步，第【1】步-->
+
     <dependencies>
         <dependency>
             <groupId>com.uaa</groupId>
